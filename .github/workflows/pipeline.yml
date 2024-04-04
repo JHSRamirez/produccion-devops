@@ -22,9 +22,4 @@ jobs:
     - name: Ejecuta master
       run: npm run test  # Ajusta esto según tu comando para pruebas
 
-    - name: Despliegue en Render
-      if: github.ref == 'refs/heads/master'  # Asegura que esto solo ocurra en la rama principal
-      uses: renderinc/deploy-to-render-action@v1
-      with:
-        render_service_id: ${{ secrets.RENDER_SERVICE_ID }}  # Asegúrate de configurar esto en tus secretos de GitHub
-        render_auth_token: ${{ secrets.RENDER_AUTH_TOKEN }}  # Asegúrate de configurar esto en tus secretos de GitHub
+
