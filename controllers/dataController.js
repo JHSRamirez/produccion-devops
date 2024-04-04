@@ -111,3 +111,41 @@ exports.updateDataBook = async (req, res) => {
     res.status(500).send('Error interno del servidor');
   }
 };
+
+//------------------------------------------------------------------
+
+
+exports.deleteDataCli = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const client = await pool.connect();
+    const result = await client.query('DELETE FROM cliente WHERE id = $1 RETURNING *', [id]);
+    const deletedData = result.rows[0];
+    client.release();
+    if (!deletedData) {
+      return res.status(404).send('Registro no encontrado');
+    }
+    res.status(200).json(deletedData);
+  } catch (err) {
+    console.error('Error al eliminar el registro:', err);
+    res.status(500).send('Error interno del servidor');
+  }
+};
+
+
+exports.deleteDataBook = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const client = await pool.connect();
+    const result = await client.query('DELETE FROM libros WHERE id = $1 RETURNING *', [id]);
+    const deletedData = result.rows[0];
+    client.release();
+    if (!deletedData) {
+      return res.status(404).send('Registro no encontrado');
+    }
+    res.status(200).json(deletedData);
+  } catch (err) {
+    console.error('Error al eliminar el registro:', err);
+    res.status(500).send('Error interno del servidor');
+  }
+};
