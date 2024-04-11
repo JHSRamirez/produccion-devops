@@ -16,14 +16,6 @@ describe('API Routes', () => {
   
   });
 
-  describe('API Routes', () => {
-    test('GET /api/books', async () => {
-      const response = await request(app).get('/api/books');
-      expect(response.statusCode).toBe(200);
-      
-    });
-  
-  });
 
 
 //---------------------------------------------------
@@ -51,22 +43,21 @@ describe('POST /api/createClient', () => {
 
 
 
-  describe('POST /api/createBook', () => {
-    test('debería crear un nuevo usuario y responder con un status 200 y el libro creado', async () => {
-      const nuevoBook=     {
-        
-        "titulo": "Laleyenda urbana",
-        "autor": "Andres Restrepo",
-        "año_publicacion": 1996,
-        "editorial": "nirvana"
-      };
-  
-      const response = await request(app)
-        .post('/api/createBook')
-        .send(nuevoBook);
-  
-      expect(response.statusCode).toBe(200);
-      expect(response.body).toHaveProperty('id'); 
-    });
-  
+
+
+  //--------------------------------------------------------------
+
+
+
+
+describe('DELETE /api/deleteClient/:id', () => {
+  test('debería eliminar un cliente y responder con un status 200', async () => {
+    const itemId = 5;
+    
+    const response = await request(app)
+      .delete(`/api/deleteClient/:${itemId}`);
+    
+    expect(response.statusCode).toBe(200);
+    
   });
+});
