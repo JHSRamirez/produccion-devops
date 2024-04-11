@@ -29,18 +29,6 @@ exports.getAllDataClient = async (req, res) => {
 };
 
 
-exports.getAllDataBook = async (req, res) => {
-  try {
-    const client = await pool.connect();
-    const result = await client.query('SELECT * FROM libros');
-    const data = result.rows;
-    client.release();
-    res .json(data);
-  } catch (err) {
-    console.error('Error al obtener datos:', err);
-    res.status(500).send('Error interno del servidor');
-  }
-};
 
 //--------------------------------------------------------------------------
 
@@ -60,19 +48,7 @@ exports.createDataCli = async (req, res) => {
 };
 
 
-exports.createDataBook = async (req, res) => {
-  const { titulo, autor, año_publicacion, editorial } = req.body;
-  try {
-    const client = await pool.connect();
-    const result = await client.query('INSERT INTO libros (titulo, autor, año_publicacion, editorial) VALUES ($1, $2, $3, $4) RETURNING *', [ titulo, autor, año_publicacion, editorial]);
-    const newData = result.rows[0];
-    client.release();
-    res.status(200).json(newData);
-  } catch (err) {
-    console.error('Error al crear un nuevo registro:', err);
-    res.status(500).send('Error interno del servidor');
-  }
-};
+
 
 //--------------------------------------------------------------------------------
 
@@ -94,23 +70,7 @@ exports.updateDataCli = async (req, res) => {
   }
 };
 
-exports.updateDataBook = async (req, res) => {
-  const id = req.params.id;
-  const {  titulo, autor, año_publicacion, editorial  } = req.body;
-  try {
-    const client = await pool.connect();
-    const result = await client.query('UPDATE libros SET  titulo = $1, autor =$2, año_publicacion =$3, editorial =$4  WHERE id = $5 RETURNING *', [titulo, autor, año_publicacion, editorial , id ]);
-    const updatedData = result.rows[0];
-    client.release();
-    if (!updatedData) {
-      return res.status(404).send('Registro no encontrado');
-    }
-    res.json(updatedData);
-  } catch (err) {
-    console.error('Error al actualizar el registro:', err);
-    res.status(500).send('Error interno del servidor');
-  }
-};
+
 
 //------------------------------------------------------------------
 
@@ -133,19 +93,20 @@ exports.deleteDataCli = async (req, res) => {
 };
 
 
-exports.deleteDataBook = async (req, res) => {
-  const id = req.params.id;
+//--------------------------------------------------------------------
+
+
+
+// Endpoint de Health Check
+// healthController.js
+
+
+// Función del controlador de health check
+exports.checkHealth = async (req, res) => {
   try {
-    const client = await pool.connect();
-    const result = await client.query('DELETE FROM libros WHERE id = $1 RETURNING *', [id]);
-    const deletedData = result.rows[0];
-    client.release();
-    if (!deletedData) {
-      return res.status(404).send('Registro no encontrado');
-    }
-    res.status(200).json(deletedData);
-  } catch (err) {
-    console.error('Error al eliminar el registro:', err);
-    res.status(500).send('Error interno del servidor');
+    await pool.query('SELECT 1'); // Asume que este comando verifica la salud de tu conexión a la base de datos
+    res.status(200).json({ status: 'success', message: 'Backend and Database are healthy!' });
+  } catch (error) {
+    res.status(500).json({ status: 'failure', message: 'Health check failed', error: error.message });
   }
 };
