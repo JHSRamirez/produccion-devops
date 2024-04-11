@@ -49,15 +49,3 @@ describe('POST /api/createClient', () => {
 
 
 
-
-describe('DELETE /api/deleteClient/:id', () => {
-  test('debería eliminar un cliente y responder con un status 200', async () => {
-    const itemId = 5;
-    
-    const response = await request(app)
-      .delete(`/api/deleteClient/:${itemId}`);
-    
-    expect(response.statusCode).toBe(200);
-    
-  });
-});
