@@ -29,3 +29,20 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm run test
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/production' && github.event_name == 'push'  # Solo despliega si es un push a main
+    steps:
+    - uses: actions/checkout@v3
+      name: Checkout code
+
+    - name: Deploy to Render
+      uses: conradludgate/render-action@v1
+      with:
+        render_email: ${{ secrets.RENDER_EMAIL }}
+        render_password: ${{ secrets.RENDER_PASSWORD }}
+        render_service: srv-coc4p68l6cac73eq08ag?key=NHt4IpUjKl8  # Reemplaza esto por el ID de tu servicio en Render
+        render_branch: production  # La rama de tu repositorio que desencadena el despliegue
+        render_clear_cache: true  # Si necesitas limpiar la caché en cada despliegue
